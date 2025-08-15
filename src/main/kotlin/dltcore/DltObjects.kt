@@ -600,6 +600,7 @@ public class DltPayloadArgumentNumber(
                 }
 
                 DltPayloadArgumentType.SINT -> when (lenInBytes) {
+                    1 -> bb.readByte()
                     2 -> bb.readShort()
                     4 -> bb.readInt()
                     8 -> bb.readLong()
@@ -607,6 +608,7 @@ public class DltPayloadArgumentNumber(
                 }
 
                 DltPayloadArgumentType.UINT -> when (lenInBytes) {
+                    1 -> bb.readByte()
                     2 -> bb.readShort()
                     4 -> bb.readInt()
                     8 -> bb.readLong()
