@@ -3,14 +3,14 @@ import org.jreleaser.model.Active
 import org.jreleaser.model.Http
 
 plugins {
-    kotlin("jvm").version("2.2.10")
+    kotlin("jvm").version("2.3.10")
     `java-library`
     `maven-publish`
-    id("org.jreleaser") version "1.19.0"
+    id("org.jreleaser") version "1.23.0"
 }
 
 group = "io.github.froks"
-version = "0.4.1"
+version = "0.4.3"
 
 repositories {
     mavenLocal()
@@ -26,7 +26,7 @@ kotlin {
     jvmToolchain(21)
     explicitApi()
     compilerOptions {
-        jvmTarget = JvmTarget.JVM_1_8
+        jvmTarget = JvmTarget.JVM_21
     }
 }
 
@@ -36,13 +36,13 @@ java {
 }
 
 tasks.withType<JavaCompile>().configureEach {
-    targetCompatibility = "1.8"
-    sourceCompatibility = "1.8"
+    targetCompatibility = "21"
+    sourceCompatibility = "21"
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>().configureEach {
     compilerOptions {
-        jvmTarget.set(JvmTarget.JVM_1_8)
+        jvmTarget.set(JvmTarget.JVM_21)
         freeCompilerArgs.add("-opt-in=kotlin.RequiresOptIn")
     }
 }
