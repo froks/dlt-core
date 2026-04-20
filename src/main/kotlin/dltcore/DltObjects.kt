@@ -244,8 +244,8 @@ public enum class MessageTypeInfo(public val type: MessageType, public val value
     DLT_NW_TRACE_ETHERNET(MessageType.DLT_TYPE_NW_TRACE, 0x5),
     DLT_NW_TRACE_SOMEIP(MessageType.DLT_TYPE_NW_TRACE, 0x6),
 
-    DLT_CONTROL_REQUEST(MessageType.DLT_TYPE_CONTROL, 0x5),
-    DLT_CONTROL_RESPONSE(MessageType.DLT_TYPE_CONTROL, 0x6),
+    DLT_CONTROL_REQUEST(MessageType.DLT_TYPE_CONTROL, 0x1),
+    DLT_CONTROL_RESPONSE(MessageType.DLT_TYPE_CONTROL, 0x2),
 
     UNKNOWN(MessageType.DLT_TYPE_LOG, -1);
 
@@ -411,7 +411,7 @@ public abstract class DltPayloadArgument(
         public const val TYPEINFO_VARI: Int = 0x0800
         public const val TYPEINFO_FIXP: Int = 0x1000
         public const val TYPEINFO_MASK_TYLE: Int = 0x7
-        public const val TYPEINFO_MASK_STRING_ENCODING: Int = 0x38000
+        public const val TYPEINFO_MASK_STRING_ENCODING: Int = 0x18000
 
         public fun getVariableName(typeInfo: Int, bb: BinaryInputStream): String? {
             if (typeInfo and TYPEINFO_VARI > 0) {
@@ -534,10 +534,11 @@ private val DltRawHexFormat = HexFormat {
 
 public class DltPayloadArgumentRawData(
     public val data: String,
+    private val byteCount: Int,
     variableName: String?
-) : DltPayloadArgument(DltPayloadArgumentType.STRG, variableName) {
+) : DltPayloadArgument(DltPayloadArgumentType.RAWD, variableName) {
     override val dataSize: Int
-        get() = data.length
+        get() = byteCount
 
     override fun toString(): String =
         data
@@ -552,7 +553,7 @@ public class DltPayloadArgumentRawData(
             val data = bb.readArray(len)
 
             val s = data.toHexString(DltRawHexFormat)
-            return DltPayloadArgumentRawData(s, variableName)
+            return DltPayloadArgumentRawData(s, len, variableName)
         }
     }
 }
@@ -622,5 +623,11 @@ public class DltPayloadArgumentNumber(
     }
 
     override fun toString(): String =
-        number.toString()
+        if (isUnsigned) when (number) {
+            is Byte -> number.toUByte().toString()
+            is Short -> number.toUShort().toString()
+            is Int -> number.toUInt().toString()
+            is Long -> number.toULong().toString()
+            else -> number.toString()
+        } else number.toString()
 }
