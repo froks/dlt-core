@@ -3,10 +3,10 @@ import org.jreleaser.model.Active
 import org.jreleaser.model.Http
 
 plugins {
-    kotlin("jvm").version("2.3.10")
+    kotlin("jvm").version("2.3.21")
     `java-library`
     `maven-publish`
-    id("org.jreleaser") version "1.23.0"
+    id("org.jreleaser") version "1.24.0"
 }
 
 group = "io.github.froks"
